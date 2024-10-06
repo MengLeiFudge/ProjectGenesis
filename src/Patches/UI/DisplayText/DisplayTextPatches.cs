@@ -74,12 +74,14 @@ namespace ProjectGenesis.Patches.UI.DisplayText
             {
                 case 2:
                     __result = "裂变能".TranslateFromJson();
-
                     break;
 
                 case 16:
                     __result = "聚变能".TranslateFromJson();
-
+                    break;
+                
+                case 31:
+                    __result = "黑雾能".TranslateFromJson();
                     break;
             }
         }
@@ -207,7 +209,7 @@ namespace ProjectGenesis.Patches.UI.DisplayText
                     break;
 
                 case ProtoID.T虫洞航行:
-                    __result = "虫洞航行文字描述".TranslateFromJson();
+                    __result = "量子折跃文字描述".TranslateFromJson();
 
                     break;
 

@@ -17,6 +17,7 @@
     "ItemPoints": [],
     "HashNeeded": 1,
     "UnlockRecipes": [
+      11,
       25
     ],
     "UnlockFunctions": [],
@@ -158,7 +159,6 @@
     ],
     "HashNeeded": 9000,
     "UnlockRecipes": [
-      11,
       12,
       13
     ],
@@ -1247,10 +1247,10 @@
   },
   {
     "ID": 1152,
-    "Name": "T虫洞航行",
+    "Name": "T量子折跃",
     "IconPath": "Assets/texpack/虫洞航行",
-    "Desc": "T虫洞航行描述",
-    "Conclusion": "T虫洞航行描述",
+    "Desc": "T量子折跃描述",
+    "Conclusion": "T量子折跃描述",
     "IsHiddenTech": true,
     "PreItem": [
       5204,
@@ -3513,8 +3513,12 @@
     "UnlockRecipes": [
       103
     ],
-    "UnlockFunctions": [],
-    "UnlockValues": [],
+    "UnlockFunctions": [
+      42
+    ],
+    "UnlockValues": [
+      1.0
+    ],
     "Published": true,
     "Level": 0,
     "MaxLevel": 0,

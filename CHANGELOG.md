@@ -1,10 +1,53 @@
+- v2.10.0-alpha2 (Experimental 0.3.10002)
+  + 调整了`戈壁`和`黑石岩滩`星球上的`放射性矿脉`生成参数
+  + 调整了所有矩阵的制造需求（影响存档）
+  + 从击杀地面黑雾后的掉落物清单中移除了所有燃料棒
+
+  + Adjusted the generation parameters for 'radioactive veins' on the planets 'Gobi' and 'Blackstone'.
+  + Adjusted the manufacturing requirements for all matrices (affects save).
+  + Removed all rods from the drop list after killing ground dark fog.
+
+
+<details>
+  <summary>点击展开日志 | Click to view all </summary>
+
+
+- v2.10.0-alpha1 量子秘域 | Quantum Enclaves
+  + 修复了传送带两端颜色不正确的问题（感谢starfi5h的工作）
+  + 修复了在`高频激光塔`攻击时升降级导致的存档损坏问题（影响存档）
+  + 调整了黑雾掉落物`能量碎片`的燃料类型
+  + 调整了黑雾制造台`物质重组工厂`的制造速度为8x
+  + 调整了黑雾熔炉和制造台的升降级路线
+  + 调整了`量子储物箱`的容量为80（影响存档）
+  + （实验性功能，可能会造成性能问题）为`量子储物箱`添加频道功能，不同频道间的物品不共享（影响存档）
+
+  + Fixed the issue with incorrect colors at both ends of the conveyor belts (Thanks to starfi5h's work)
+  + Fixed the save file corruption caused by leveling up or down during attacks by the High-Frequency Laser Tower (affects save)
+  + Adjusted the fuel type of the Energy Shard, a drop from the Dark Fog
+  + Set the production speed of Re-composing Assembler to 8x
+  + Adjusted the upgrade paths for the Dark Fog Furnace and Re-composing Assembler
+  + Adjusted the capacity of the Quantum Storage to 80 (affects save)
+  + (Experimental feature, may cause performance issues) Added channel functionality to the Quantum Storage, items are not shared between different channels (affects save)
+
+
+- v2.9.13
+  + 适配版本v0.10.30.23292
+  + 集装改良科技升级研究完毕后，调整集装分拣器速度为240物品/秒 （感谢萌泪酱的工作）
+  + 重新添加配方堆积逻辑配置项
+  + 下调建造在地核钻井上的地热发电站的基础产出 (300% -> 200%)
+
+  + Adaptation of version v0.10.30.23292
+  + Adjusted the speed of the Pile Sorter to 240/s after the research of the Pile Sorter Upgrade was completed (thanks
+    to MengleiFudge for the work)
+  + Re-added recipe stacking logic configuration item
+  + Downgraded the base energy output of Geothermal Power Station built on Core Driller (300% -> 200%)
+
+
 - v2.9.12
   + 调整与`深空来敌 v3.0.0`、`更多巨构 v1.3.7` mod的兼容性
 
   + Adjust compatibility with `TheyComeFromVoid v3.0.0`, `MoreMegaStructures v1.3.7` mod
 
-<details>
-  <summary>点击展开日志 | Click to view all </summary>
 
 - v2.9.11
   + 适配NebulaMultiplayerModApi版本2.0.0

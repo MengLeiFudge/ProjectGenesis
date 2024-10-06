@@ -52,8 +52,8 @@ namespace ProjectGenesis
     {
         public const string MODGUID = "org.LoShin.GenesisBook";
         public const string MODNAME = "GenesisBook";
-        public const string VERSION = "2.9.13";
-        public const string DEBUGVERSION = "preview";
+        public const string VERSION = "2.10.0";
+        public const string DEBUGVERSION = "-alpha2";
 
         public static bool LoadCompleted;
 
@@ -66,10 +66,11 @@ namespace ProjectGenesis
 
         internal static string ModPath;
 
-        internal static ConfigEntry<bool> EnableLDBToolCacheEntry,
-                                          EnableHideTechModeEntry,
-                                          DisableMessageBoxEntry,
-                                          ChangeStackingLogicEntry;
+        internal static ConfigEntry<bool> LDBToolCacheEntry,
+            HideTechModeEntry,
+            ShowMessageBoxEntry;
+
+        internal static ConfigEntry<int> ProductOverflowEntry;
 
         internal static ConfigEntry<KeyboardShortcut> QToolsHotkey;
 
@@ -77,34 +78,37 @@ namespace ProjectGenesis
 
         public void Awake()
         {
-        #region Logger
+            #region Logger
 
             logger = Logger;
             logger.Log(LogLevel.Info, "GenesisBook Awake");
 
-        #endregion Logger
+            #endregion Logger
 
-        #region Configs
+            #region Configs
 
             configFile = Config;
 
-            EnableLDBToolCacheEntry = Config.Bind("config", "UseLDBToolCache", false,
+            LDBToolCacheEntry = Config.Bind("config", "UseLDBToolCache", false,
                 "Enable LDBTool Cache, which allows you use config to fix some compatibility issues.\n启用LDBTool缓存，允许使用配置文件修复部分兼容性问题");
 
-            EnableHideTechModeEntry = Config.Bind("config", "HideTechMode", true,
+            HideTechModeEntry = Config.Bind("config", "HideTechMode", true,
                 "Enable Tech Exploration Mode, which will hide locked techs in tech tree.\n启用科技探索模式，启用后将隐藏未解锁的科技");
 
-            DisableMessageBoxEntry = Config.Bind("config", "DiableMessageBox", false, "Don't show message when GenesisBook is loaded.\n禁用首次加载时的提示信息");
+            ShowMessageBoxEntry = Config.Bind("config", "ShowMessageBox", true,
+                "Don't show message when GenesisBook is loaded.\n禁用首次加载时的提示信息");
 
-            ChangeStackingLogicEntry = Config.Bind("config", "ChangeStackingLogic", true, "Changing the condition for stopping production of some chemical recipes from single product pile up to all product pile up.\n将部分化工配方停止生产的条件由单产物堆积改为所有产物均堆积");
+            ProductOverflowEntry = Config.Bind("config", "ProductOverflow", 0,
+                "Changing the condition for stopping production of some recipes from single product pile up to all product pile up.\n将部分配方停止生产的条件由单产物堆积改为所有产物均堆积");
 
-            QToolsHotkey = Config.Bind("config", "QToolsHotkey", KeyboardShortcut.Deserialize("BackQuote"), "Shortcut to open QTools window");
+            QToolsHotkey = Config.Bind("config", "QToolsHotkey", KeyboardShortcut.Deserialize("BackQuote"),
+                "Shortcut to open QTools window");
 
             Config.Save();
 
-        #endregion Configs
+            #endregion Configs
 
-        #region ResourceData
+            #region ResourceData
 
             var executingAssembly = Assembly.GetExecutingAssembly();
 
@@ -118,23 +122,30 @@ namespace ProjectGenesis
             resources_models.LoadAssetBundle("genesis-models");
             ProtoRegistry.AddResource(resources_models);
 
-            Shader stoneVeinShader = resources_models.bundle.LoadAsset<Shader>("Assets/genesis-models/shaders/PBR Standard Vein Stone COLOR.shader");
+            Shader stoneVeinShader =
+                resources_models.bundle.LoadAsset<Shader>(
+                    "Assets/genesis-models/shaders/PBR Standard Vein Stone COLOR.shader");
             SwapShaderPatches.AddSwapShaderMapping("VF Shaders/Forward/PBR Standard Vein Stone", stoneVeinShader);
 
-            Shader metalVeinShader = resources_models.bundle.LoadAsset<Shader>("Assets/genesis-models/shaders/PBR Standard Vein Metal COLOR.shader");
+            Shader metalVeinShader =
+                resources_models.bundle.LoadAsset<Shader>(
+                    "Assets/genesis-models/shaders/PBR Standard Vein Metal COLOR.shader");
             SwapShaderPatches.AddSwapShaderMapping("VF Shaders/Forward/PBR Standard Vein Metal", metalVeinShader);
 
-        #endregion ResourceData
+            #endregion ResourceData
 
-        #region NebulaModAPI
+            #region NebulaModAPI
 
             NebulaModAPI.RegisterPackets(executingAssembly);
 
-            NebulaModAPI.OnPlanetLoadRequest += planetId => { NebulaModAPI.MultiplayerSession.Network.SendPacket(new GenesisBookPlanetLoadRequest(planetId)); };
+            NebulaModAPI.OnPlanetLoadRequest += planetId =>
+            {
+                NebulaModAPI.MultiplayerSession.Network.SendPacket(new GenesisBookPlanetLoadRequest(planetId));
+            };
 
             NebulaModAPI.OnPlanetLoadFinished += GenesisBookPlanetDataProcessor.ProcessBytesLater;
 
-        #endregion NebulaModAPI
+            #endregion NebulaModAPI
 
             Harmony = new Harmony(MODGUID);
 
@@ -149,9 +160,12 @@ namespace ProjectGenesis
 
             TableID = new int[]
             {
-                TabSystem.RegisterTab("org.LoShin.GenesisBook:org.LoShin.GenesisBookTab1", new TabData("精炼页面".TranslateFromJsonSpecial(), "Assets/texpack/矿物处理")),
-                TabSystem.RegisterTab("org.LoShin.GenesisBook:org.LoShin.GenesisBookTab2", new TabData("化工页面".TranslateFromJsonSpecial(), "Assets/texpack/化工科技")),
-                TabSystem.RegisterTab("org.LoShin.GenesisBook:org.LoShin.GenesisBookTab3", new TabData("防御页面".TranslateFromJsonSpecial(), "Assets/texpack/防御")),
+                TabSystem.RegisterTab($"{MODGUID}:{MODGUID}Tab1",
+                    new TabData("精炼页面".TranslateFromJsonSpecial(), "Assets/texpack/矿物处理")),
+                TabSystem.RegisterTab($"{MODGUID}:{MODGUID}Tab2",
+                    new TabData("化工页面".TranslateFromJsonSpecial(), "Assets/texpack/化工科技")),
+                TabSystem.RegisterTab($"{MODGUID}:{MODGUID}Tab3",
+                    new TabData("防御页面".TranslateFromJsonSpecial(), "Assets/texpack/防御")),
             };
 
             RegisterStrings();
@@ -172,6 +186,7 @@ namespace ProjectGenesis
 
         public void Export(BinaryWriter w)
         {
+            w.Write(VersionNumber());
             MegaAssemblerPatches.Export(w);
             PlanetFocusPatches.Export(w);
             QuantumStoragePatches.Export(w);
@@ -180,6 +195,7 @@ namespace ProjectGenesis
 
         public void Import(BinaryReader r)
         {
+            var version = r.ReadInt32();
             MegaAssemblerPatches.Import(r);
             PlanetFocusPatches.Import(r);
             QuantumStoragePatches.Import(r);
@@ -266,6 +282,18 @@ namespace ProjectGenesis
             turretNeed[2] = ProtoID.I超合金弹箱;
 
             ItemProto.stationCollectorId = ProtoID.I轨道采集器;
+            LabComponent.matrixIds = new[]
+            {
+                ProtoID.I电磁矩阵,
+                ProtoID.I能量矩阵,
+                ProtoID.I结构矩阵,
+                ProtoID.I信息矩阵,
+                ProtoID.I引力矩阵,
+                ProtoID.I宇宙矩阵,
+                ProtoID.I通量矩阵,
+                ProtoID.I空间矩阵,
+                ProtoID.I宇宙矩阵粗坯,
+            };
 
             ItemPostFix();
 
@@ -320,16 +348,24 @@ namespace ProjectGenesis
             }
         }
 
-        internal static void SetConfig(bool currentLDBToolCache, bool currentHideTechMode, bool currentDisableMessageBox, bool currentEnableProductOverflow)
+        internal static void SetConfig(bool currentLDBToolCache, bool currentHideTechMode, bool currentShowMessageBox,
+            int currentProductOverflow)
         {
-            EnableLDBToolCacheEntry.Value = currentLDBToolCache;
-            EnableHideTechModeEntry.Value = currentHideTechMode;
-            DisableMessageBoxEntry.Value = currentDisableMessageBox;
-            ChangeStackingLogicEntry.Value = currentEnableProductOverflow;
+            LDBToolCacheEntry.Value = currentLDBToolCache;
+            HideTechModeEntry.Value = currentHideTechMode;
+            ShowMessageBoxEntry.Value = currentShowMessageBox;
+            ProductOverflowEntry.Value = currentProductOverflow;
             logger.LogInfo("SettingChanged");
             configFile.Save();
         }
 
         internal static void LogInfo(object data) => logger.LogInfo(data);
+
+        internal static int VersionNumber()
+        {
+            var version = new Version();
+            version.FromFullString(VERSION);
+            return version.sig;
+        }
     }
 }

@@ -255,9 +255,9 @@
     "ENUS": "Planet Atmosphere"
   },
   {
-    "Name": "虫洞航行文字描述",
-    "ZHCN": "在空间曲面上开辟一个一次性虫洞，实现超远程折跃。",
-    "ENUS": "Open a one-time wormhole on the space surface to achieve ultra-long-range leap."
+    "Name": "量子折跃文字描述",
+    "ZHCN": "使用大量的能量激活负熵奇点，短暂进入虚数空间以实现超远程折跃。",
+    "ENUS": "Use a large amount of energy to activate a negative entropy singularity and briefly enter void space for a hyper-remote folding leap."
   },
   {
     "Name": "巨型建筑工程学文字描述",
@@ -323,11 +323,6 @@
     "Name": "钨矿",
     "ZHCN": "钨矿",
     "ENUS": "Tungsten ore"
-  },
-  {
-    "Name": "铜线圈",
-    "ZHCN": "铜线圈",
-    "ENUS": "Copper Coil"
   },
   {
     "Name": "混凝土",
@@ -1405,14 +1400,14 @@
     "ENUS": "Incremental Production"
   },
   {
-    "Name": "T虫洞航行",
-    "ZHCN": "虫洞航行",
-    "ENUS": "Wormhole Navigation"
+    "Name": "T量子折跃",
+    "ZHCN": "量子折跃",
+    "ENUS": "Quantum Navigation"
   },
   {
-    "Name": "T虫洞航行描述",
-    "ZHCN": "消耗1个<color=\"#FD965ECC\">负熵奇点</color>和 12GJ 能量制造一个一次性虫洞，可将机甲传送至<color=\"#FD965ECC\">星图模式</color>下选择的任意星球，但请小心星轨间的干扰。\r\n<color=\"#FD965ECC\">警告：</color>该科技的相关技术已被COSMO技术伦理委员会禁用，<color=\"#FD965ECC\">请手动研究。</color>",
-    "ENUS": "Consumes 1 <color=\"#FD965ECC\">Negentropy Singularity</color> and 12GJ mecha energy to create a one-time wormhole that can teleport the mecha to any planet selected in <color=\"#FD965ECC\">Star Map Mode</color>, but be careful of the interference between the orbits.\r\n<color=\"#FD965ECC\">Warning:</color> This technology has been prohibited by the COSMO Technology Ethics Committee. <color=\"#FD965ECC\">Please initiate such research manually.</color>"
+    "Name": "T量子折跃描述",
+    "ZHCN": "消耗1个<color=\"#FD965ECC\">负熵奇点</color>和 12GJ 能量短暂进入虚数空间，并将机甲传送至<color=\"#FD965ECC\">星图模式</color>下选择的任意星球，但请小心星轨间的干扰。\r\n<color=\"#FD965ECC\">警告：</color>该科技的相关技术已被COSMO技术伦理委员会禁用，<color=\"#FD965ECC\">请手动研究。</color>",
+    "ENUS": "Consumes 1 <color=\"#FD965ECC\">Negentropy Singularity</color> and 12GJ mecha energy to open up a rift to imaginary space and teleport the mecha to any planet selected in <color=\"#FD965ECC\">Star Map Mode</color>, but be careful of the interference between the orbits.\r\n<color=\"#FD965ECC\">Warning:</color> This technology has been prohibited by the COSMO Technology Ethics Committee. <color=\"#FD965ECC\">Please initiate such research manually.</color>"
   },
   {
     "Name": "人造恒星描述",
@@ -1948,11 +1943,6 @@
     "Name": "I钨矿",
     "ZHCN": "稀有矿物。钨作为化学性质稳定的重金属通常埋藏于行星深处，但在特殊的地质构造条件下，深层岩浆热液的硅铝或碳酸盐建造作用可作用于表层岩体，使星球的表面出现成规模的钨矿。",
     "ENUS": "A rare mineral. As a chemically stable heavy metal, tungsten is usually buried deep in the planet, but under special geological and tectonic conditions, the silica-aluminum or carbonate building action of deep magmatic hydrothermal fluids can act on the surface rocks and cause tungsten ores to appear on the planet's surface."
-  },
-  {
-    "Name": "I铜线圈",
-    "ZHCN": "最基本的电磁元件，非常实用。",
-    "ENUS": "The most basic electromagnetic components, very practical."
   },
   {
     "Name": "I焦油",
