@@ -4,7 +4,7 @@ using HarmonyLib;
 
 namespace ProjectGenesis.Patches.Logic
 {
-    internal static class InserterComponentPatches
+    public static class InserterComponentPatches
     {
         /// <summary>
         /// 集装改良科技全部研究完毕情况下，集装分拣器物品详情描述窗口的传输速度改为240物品/秒。

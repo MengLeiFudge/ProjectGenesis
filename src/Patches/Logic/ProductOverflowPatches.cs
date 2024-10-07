@@ -53,7 +53,7 @@ namespace ProjectGenesis.Patches.Logic
 
         public static bool AssemblerComponent_InsertMethod_Refine(ref AssemblerComponent component, int[] productRegister)
         {
-            if (!ProjectGenesis.ChangeStackingLogicEntry.Value || component.products.Length < 2) return false;
+            if (component.products.Length < 2) return false;
 
             switch (ProjectGenesis.ProductOverflowEntry.Value)
             {
@@ -80,7 +80,7 @@ namespace ProjectGenesis.Patches.Logic
 
         public static bool AssemblerComponent_InsertMethod_Chemical(ref AssemblerComponent component, int[] productRegister)
         {
-            if (!ProjectGenesis.ChangeStackingLogicEntry.Value || component.products.Length < 2) return false;
+            if (component.products.Length < 2) return false;
 
             switch (ProjectGenesis.ProductOverflowEntry.Value)
             {
@@ -110,7 +110,7 @@ namespace ProjectGenesis.Patches.Logic
 
         public static bool AssemblerComponent_InsertMethod_Other(ref AssemblerComponent component, int[] productRegister)
         {
-            if (!ProjectGenesis.ChangeStackingLogicEntry.Value || component.products.Length < 2) return false;
+            if (component.products.Length < 2) return false;
 
             switch (ProjectGenesis.ProductOverflowEntry.Value)
             {
