@@ -152,8 +152,8 @@ namespace ProjectGenesis.Patches.UI
             var matcher = new CodeMatcher(instructions);
 
             matcher.MatchForward(false,
-                new CodeMatch(OpCodes.Ldsfld,
-                    AccessTools.Field(typeof(LabComponent), nameof(LabComponent.matrixIds))));
+                new CodeMatch(OpCodes.Ldsfld, AccessTools.Field(typeof(LabComponent), nameof(LabComponent.matrixIds))),
+                new CodeMatch(OpCodes.Ldc_I4_0));
 
             matcher.InsertAndAdvance(new CodeInstruction(OpCodes.Call,
                 AccessTools.Method(typeof(ResearchLabPatches), nameof(ChangeMatrixIds))));
@@ -212,6 +212,8 @@ namespace ProjectGenesis.Patches.UI
                 new CodeInstruction(OpCodes.Call,
                     AccessTools.Method(typeof(ResearchLabPatches),
                         nameof(LabComponent_InternalUpdateResearch_Patch_Method))),
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Stloc_0),
                 new CodeInstruction(OpCodes.Brtrue, label),
                 new CodeInstruction(OpCodes.Ldc_I4_0),
                 new CodeInstruction(OpCodes.Ret)
@@ -220,29 +222,45 @@ namespace ProjectGenesis.Patches.UI
             return matcher.InstructionEnumeration();
         }
 
+        [HarmonyPatch(typeof(PlanetFactory), nameof(PlanetFactory.InsertInto))]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> PlanetFactory_InsertInto_Transpiler(
+            IEnumerable<CodeInstruction> instructions)
+        {
+            var matcher = new CodeMatcher(instructions);
+
+            matcher.MatchForward(false, new CodeMatch(OpCodes.Ldc_I4, 6001));
+
+            matcher.InsertAndAdvance(new CodeInstruction(OpCodes.Call,
+                AccessTools.Method(typeof(ResearchLabPatches), nameof(ChangeMatrixIds))));
+
+            matcher.MatchForward(false, new CodeMatch(OpCodes.Ldc_I4_6));
+
+            matcher.SetInstructionAndAdvance(new CodeInstruction(
+                OpCodes.Ldsfld, AccessTools.Field(typeof(LabComponent), nameof(LabComponent.matrixIds))));
+            matcher.InsertAndAdvance(new CodeInstruction(OpCodes.Ldlen));
+
+            return matcher.InstructionEnumeration();
+        }
 
         [HarmonyPatch(typeof(LabComponent), nameof(LabComponent.UpdateNeedsResearch))]
         [HarmonyPrefix]
         [HarmonyPriority(Priority.First)]
-        public static bool LabComponent_UpdateNeedsResearch_Prefix(ref LabComponent component)
+        public static bool LabComponent_UpdateNeedsResearch_Prefix(ref LabComponent __instance)
         {
+            var tech = LDB.techs.Select(__instance.techId);
+
             const int num = 36000;
 
             int needIndex = 0;
 
-            for (int i = 0; i < component.matrixServed.Length; i++)
+            foreach (var need in tech.Items)
             {
-                if (component.matrixServed[i] < num)
-                {
-                    component.needs[needIndex++] = LabComponent.matrixIds[i];
-                }
-            }
+                var itemIndex = Array.IndexOf(LabComponent.matrixIds, need);
 
-            if (needIndex < 6)
-            {
-                for (int i = needIndex; i < 6; i++)
+                if (itemIndex > 0 && __instance.matrixServed[itemIndex] < num)
                 {
-                    component.needs[i] = 0;
+                    __instance.needs[needIndex++] = need;
                 }
             }
 
@@ -346,10 +364,10 @@ namespace ProjectGenesis.Patches.UI
             {
                 if (labComponent.matrixServed[i] >= 3600 && labPool[labComponent.nextLabId].matrixServed[i] < 3600)
                 {
-                    int num = labComponent.split_inc(ref labComponent.matrixServed[0],
-                        ref labComponent.matrixIncServed[0], 3600);
-                    labPool[labComponent.nextLabId].matrixIncServed[0] += num;
-                    labPool[labComponent.nextLabId].matrixServed[0] += 3600;
+                    int num = labComponent.split_inc(ref labComponent.matrixServed[i],
+                        ref labComponent.matrixIncServed[i], 3600);
+                    labPool[labComponent.nextLabId].matrixIncServed[i] += num;
+                    labPool[labComponent.nextLabId].matrixServed[i] += 3600;
                 }
             }
         }
