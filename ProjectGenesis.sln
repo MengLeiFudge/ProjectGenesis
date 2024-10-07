@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectGenesis.Preloader", "preloader/ProjectGenesis.Preloader.csproj", "{E07968B0-4405-43ED-9F89-BCAE7390EEAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectGenesis.Packer", "packer/ProjectGenesis.Packer.csproj", "{F7D5FFDE-43BB-4EFB-B3FE-B0219922B0F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E07968B0-4405-43ED-9F89-BCAE7390EEAF} = {E07968B0-4405-43ED-9F89-BCAE7390EEAF}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
