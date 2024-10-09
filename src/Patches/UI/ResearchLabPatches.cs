@@ -18,7 +18,7 @@ namespace ProjectGenesis.Patches.UI
         [HarmonyPostfix]
         public static void UILabWindow_OnCreate_Postfix(UILabWindow __instance)
         {
-            __instance.GetComponent<RectTransform>().sizeDelta = new Vector2(640, 420);
+            __instance.GetComponent<RectTransform>().sizeDelta = new Vector2(640, 430);
             __instance.transform.Find("matrix-group/lines").gameObject.SetActive(false);
 
             const int len = 9;
@@ -257,15 +257,13 @@ namespace ProjectGenesis.Patches.UI
                 return false;
             }
 
-            const int num = 36000;
-
             int needIndex = 0;
 
             foreach (var need in tech.Items)
             {
                 var itemIndex = Array.IndexOf(LabComponent.matrixIds, need);
 
-                if (itemIndex > 0 && __instance.matrixServed[itemIndex] < num)
+                if (itemIndex >= 0 && __instance.matrixServed[itemIndex] < 36000)
                 {
                     __instance.needs[needIndex++] = need;
                 }
@@ -281,7 +279,7 @@ namespace ProjectGenesis.Patches.UI
 
         public static int LabComponent_InternalUpdateResearch_Patch_Method(ref LabComponent labComponent, int num1)
         {
-            for (int i = 6; i < 8; i++)
+            for (int i = 6; i < LabComponent.matrixIds.Length; i++)
             {
                 if (labComponent.matrixPoints[i] <= 0) continue;
                 int point = labComponent.matrixServed[i] / labComponent.matrixPoints[i];
@@ -308,8 +306,8 @@ namespace ProjectGenesis.Patches.UI
             switch (itemId)
             {
                 case ProtoID.I通量矩阵: return 6007;
-                case ProtoID.I空间矩阵: return 6008;
-                case ProtoID.I宇宙矩阵粗坯: return 6009;
+                case ProtoID.I领域矩阵: return 6008;
+                case ProtoID.I奇点矩阵: return 6009;
                 default: return itemId;
             }
         }
@@ -321,10 +319,10 @@ namespace ProjectGenesis.Patches.UI
                 case 6: //ProtoID.I通量矩阵:
                     index1 |= 3;
                     break;
-                case 7: //ProtoID.I空间矩阵:
+                case 7: //ProtoID.I领域矩阵:
                     index1 |= 12;
                     break;
-                case 8: //ProtoID.I宇宙矩阵粗坯:
+                case 8: //ProtoID.I奇点矩阵:
                     index1 |= 31;
                     break;
             }
@@ -410,12 +408,12 @@ namespace ProjectGenesis.Patches.UI
                         AddCount(ProtoID.I能量矩阵, num);
                         break;
 
-                    case ProtoID.I空间矩阵:
+                    case ProtoID.I领域矩阵:
                         AddCount(ProtoID.I结构矩阵, num);
                         AddCount(ProtoID.I信息矩阵, num);
                         break;
 
-                    case ProtoID.I宇宙矩阵粗坯:
+                    case ProtoID.I奇点矩阵:
                         AddCount(ProtoID.I电磁矩阵, num);
                         AddCount(ProtoID.I能量矩阵, num);
                         AddCount(ProtoID.I结构矩阵, num);
