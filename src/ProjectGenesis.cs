@@ -2,14 +2,16 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using HarmonyLib;
+using UnityEngine;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using CommonAPI;
 using CommonAPI.Systems;
 using CommonAPI.Systems.ModLocalization;
+using xiaoye97;
 using crecheng.DSPModSave;
-using HarmonyLib;
 using NebulaAPI;
 using NebulaAPI.Interfaces;
 using ProjectGenesis.Compatibility;
@@ -22,11 +24,10 @@ using ProjectGenesis.Patches.UI;
 using ProjectGenesis.Patches.UI.PlanetFocus;
 using ProjectGenesis.Patches.UI.QTools;
 using ProjectGenesis.Utils;
-using UnityEngine;
-using xiaoye97;
 using static ProjectGenesis.Utils.JsonDataUtils;
 using static ProjectGenesis.Utils.CopyModelUtils;
 using static ProjectGenesis.Utils.TranslateUtils;
+using static ProjectGenesis.Utils.ModifyUpgradeTech;
 using static ProjectGenesis.Patches.Logic.AddVein.AddVeinPatches;
 using static ProjectGenesis.Patches.Logic.AddVein.ModifyPlanetTheme;
 using static ProjectGenesis.Patches.UI.ChemicalRecipeFcolPatches;
@@ -53,8 +54,8 @@ namespace ProjectGenesis
     {
         public const string MODGUID = "org.LoShin.GenesisBook";
         public const string MODNAME = "GenesisBook";
-        public const string VERSION = "2.10.0";
-        public const string DEBUGVERSION = "-beta1";
+        public const string VERSION = "3.0.11";
+        public const string DEBUGVERSION = "";
 
         public static bool LoadCompleted;
 
@@ -67,9 +68,7 @@ namespace ProjectGenesis
 
         internal static string ModPath;
 
-        internal static ConfigEntry<bool> LDBToolCacheEntry,
-            HideTechModeEntry,
-            ShowMessageBoxEntry;
+        internal static ConfigEntry<bool> LDBToolCacheEntry, HideTechModeEntry, ShowMessageBoxEntry;
 
         internal static ConfigEntry<int> ProductOverflowEntry;
 
@@ -79,14 +78,14 @@ namespace ProjectGenesis
 
         public void Awake()
         {
-            #region Logger
+        #region Logger
 
             logger = Logger;
             logger.Log(LogLevel.Info, "GenesisBook Awake");
 
-            #endregion Logger
+        #endregion Logger
 
-            #region Configs
+        #region Configs
 
             configFile = Config;
 
@@ -97,7 +96,7 @@ namespace ProjectGenesis
                 "Enable Tech Exploration Mode, which will hide locked techs in tech tree.\n启用科技探索模式，启用后将隐藏未解锁的科技");
 
             ShowMessageBoxEntry = Config.Bind("config", "ShowMessageBox", true,
-                "Don't show message when GenesisBook is loaded.\n禁用首次加载时的提示信息");
+                "Show message when GenesisBook is loaded.\n首次加载时的提示信息");
 
             ProductOverflowEntry = Config.Bind("config", "ProductOverflow", 0,
                 "Changing the condition for stopping production of some recipes from single product pile up to all product pile up.\n将部分配方停止生产的条件由单产物堆积改为所有产物均堆积");
@@ -107,9 +106,9 @@ namespace ProjectGenesis
 
             Config.Save();
 
-            #endregion Configs
+        #endregion Configs
 
-            #region ResourceData
+        #region ResourceData
 
             var executingAssembly = Assembly.GetExecutingAssembly();
 
@@ -123,19 +122,25 @@ namespace ProjectGenesis
             resources_models.LoadAssetBundle("genesis-models");
             ProtoRegistry.AddResource(resources_models);
 
+            var resources_lab = new ResourceData("org.LoShin.GenesisBook", "genesis-models-lab", ModPath);
+            resources_lab.LoadAssetBundle("genesis-models-lab");
+            ProtoRegistry.AddResource(resources_lab);
+
             Shader stoneVeinShader =
-                resources_models.bundle.LoadAsset<Shader>(
-                    "Assets/genesis-models/shaders/PBR Standard Vein Stone COLOR.shader");
+                resources_models.bundle.LoadAsset<Shader>("Assets/genesis-models/shaders/PBR Standard Vein Stone COLOR.shader");
             SwapShaderPatches.AddSwapShaderMapping("VF Shaders/Forward/PBR Standard Vein Stone", stoneVeinShader);
 
             Shader metalVeinShader =
-                resources_models.bundle.LoadAsset<Shader>(
-                    "Assets/genesis-models/shaders/PBR Standard Vein Metal COLOR.shader");
+                resources_models.bundle.LoadAsset<Shader>("Assets/genesis-models/shaders/PBR Standard Vein Metal COLOR.shader");
             SwapShaderPatches.AddSwapShaderMapping("VF Shaders/Forward/PBR Standard Vein Metal", metalVeinShader);
 
-            #endregion ResourceData
+            Shader labToggleShader =
+                resources_lab.bundle.LoadAsset<Shader>("Assets/genesis-models/shaders/PBR Standard Vertex Toggle Lab REPLACE.shader");
+            SwapShaderPatches.AddSwapShaderMapping("VF Shaders/Forward/PBR Standard Vertex Toggle Lab", labToggleShader);
 
-            #region NebulaModAPI
+        #endregion ResourceData
+
+        #region NebulaModAPI
 
             NebulaModAPI.RegisterPackets(executingAssembly);
 
@@ -146,17 +151,13 @@ namespace ProjectGenesis
 
             NebulaModAPI.OnPlanetLoadFinished += GenesisBookPlanetDataProcessor.ProcessBytesLater;
 
-            #endregion NebulaModAPI
+        #endregion NebulaModAPI
 
             Harmony = new Harmony(MODGUID);
 
             foreach (Type type in executingAssembly.GetTypes())
             {
-                if (type.Namespace == null) continue;
-
-                if (!type.Namespace.StartsWith("ProjectGenesis.Patches", StringComparison.Ordinal)) continue;
-
-                Harmony.PatchAll(type);
+                if (type.Namespace?.StartsWith("ProjectGenesis.Patches", StringComparison.Ordinal) == true) { Harmony.PatchAll(type); }
             }
 
             TableID = new int[]
@@ -165,8 +166,7 @@ namespace ProjectGenesis
                     new TabData("精炼页面".TranslateFromJsonSpecial(), "Assets/texpack/矿物处理")),
                 TabSystem.RegisterTab($"{MODGUID}:{MODGUID}Tab2",
                     new TabData("化工页面".TranslateFromJsonSpecial(), "Assets/texpack/化工科技")),
-                TabSystem.RegisterTab($"{MODGUID}:{MODGUID}Tab3",
-                    new TabData("防御页面".TranslateFromJsonSpecial(), "Assets/texpack/防御")),
+                TabSystem.RegisterTab($"{MODGUID}:{MODGUID}Tab3", new TabData("防御页面".TranslateFromJsonSpecial(), "Assets/texpack/防御")),
             };
 
             RegisterStrings();
@@ -197,7 +197,7 @@ namespace ProjectGenesis
 
         public void Import(BinaryReader r)
         {
-            var version = r.ReadInt32();
+            int version = r.ReadInt32();
             MegaAssemblerPatches.Import(r);
             PlanetFocusPatches.Import(r);
             QuantumStoragePatches.Import(r);
@@ -225,29 +225,30 @@ namespace ProjectGenesis
             AddCopiedModelProto();
             AddEffectEmitterProto();
             ImportJson(TableID);
-            ModifyUpgradeTech();
+            ModifyUpgradeTeches();
         }
 
         private void PostAddDataAction()
         {
             //飞行舱拆除
             VegeProto vegeProto = LDB.veges.Select(9999);
-            vegeProto.MiningItem = new[] { ProtoID.I四氢双环戊二烯燃料棒, ProtoID.I铁块, ProtoID.I铜块, };
-            vegeProto.MiningCount = new[] { 3, 80, 80, };
-            vegeProto.MiningChance = new float[] { 1, 1, 1, };
+            vegeProto.MiningItem = new[] { ProtoID.I四氢双环戊二烯燃料棒, ProtoID.I铁块, ProtoID.I铜块, ProtoID.I铝块 };
+            vegeProto.MiningCount = new[] { 10, 100, 100, 100 };
+            vegeProto.MiningChance = new float[] { 1, 1, 1, 1 };
             vegeProto.Preload();
 
             LabComponent.matrixIds = new[]
             {
-                ProtoID.I电磁矩阵,
-                ProtoID.I能量矩阵,
-                ProtoID.I结构矩阵,
-                ProtoID.I信息矩阵,
-                ProtoID.I引力矩阵,
-                ProtoID.I宇宙矩阵,
-                ProtoID.I通量矩阵,
-                ProtoID.I领域矩阵,
+                ProtoID.I电磁矩阵, ProtoID.I能量矩阵, ProtoID.I结构矩阵, ProtoID.I信息矩阵,
+                ProtoID.I引力矩阵, ProtoID.I宇宙矩阵, ProtoID.I通量矩阵, ProtoID.I张量矩阵,
                 ProtoID.I奇点矩阵,
+            };
+
+            LabComponent.matrixShaderStates = new[]
+            {
+                0.0f, 11111.2f, 22222.2f, 33333.2f,
+                44444.2f, 55555.2f, 66666.2f, 77777.2f,
+                88888.2f, 99999.2f,
             };
 
             LDB.items.OnAfterDeserialize();

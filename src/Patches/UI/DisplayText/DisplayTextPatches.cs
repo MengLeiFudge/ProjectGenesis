@@ -72,17 +72,21 @@ namespace ProjectGenesis.Patches.UI.DisplayText
 
             switch (type)
             {
+                case 1:
+                    __result = "化学能".TranslateFromJson();
+                    return;
+
                 case 2:
                     __result = "裂变能".TranslateFromJson();
-                    break;
+                    return;
 
                 case 16:
                     __result = "聚变能".TranslateFromJson();
-                    break;
+                    return;
 
                 case 31:
                     __result = "黑雾能".TranslateFromJson();
-                    break;
+                    return;
             }
         }
 
@@ -96,53 +100,43 @@ namespace ProjectGenesis.Patches.UI.DisplayText
             {
                 case Utils_ERecipeType.Assemble:
                     __result = "基础制造".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.标准制造:
                     __result = "标准制造".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.高精度加工:
                     __result = "高精度加工".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.矿物处理:
                     __result = "T矿物处理".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.所有制造:
                     __result = "所有制造".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.垃圾回收:
                     __result = "物质回收".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.高分子化工:
                     __result = "T先进化工".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.所有化工:
                     __result = "复合化工".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.复合制造:
                     __result = "复合制造".TranslateFromJson();
-
-                    break;
+                    return;
 
                 case Utils_ERecipeType.所有熔炉:
                     __result = "复合冶炼".TranslateFromJson();
-
-                    break;
+                    return;
             }
         }
 
@@ -159,19 +153,20 @@ namespace ProjectGenesis.Patches.UI.DisplayText
 
                     switch (__instance.prefabDesc.fuelMask)
                     {
+                        case 1:
+                            __result = "化学能".TranslateFromJson();
+                            return;
+
                         case 2:
                             __result = "裂变能".TranslateFromJson();
-
                             return;
 
                         case 4:
                             __result = "质能转换".TranslateFromJson();
-
                             return;
 
                         case 16:
                             __result = "聚变能".TranslateFromJson();
-
                             return;
                     }
 
@@ -180,15 +175,14 @@ namespace ProjectGenesis.Patches.UI.DisplayText
                     return;
 
                 case 18:
-                    if (__instance.prefabDesc.isCollectStation && __instance.ID == ProtoID.I大气采集器)
-                        __result = "行星大气".TranslateFromJson();
+                    if (__instance.prefabDesc.isCollectStation && __instance.ID == ProtoID.I大气采集器) __result = "行星大气".TranslateFromJson();
 
                     return;
 
                 case 19:
                     if (__instance.prefabDesc.minerType == EMinerType.Oil)
-                        __result = (600000.0 / __instance.prefabDesc.minerPeriod * GameMain.history.miningSpeedScale)
-                            .ToString("0.##") + "x";
+                        __result = (600000.0 / __instance.prefabDesc.minerPeriod * GameMain.history.miningSpeedScale).ToString("0.##")
+                                 + "x";
 
                     return;
             }
@@ -210,7 +204,7 @@ namespace ProjectGenesis.Patches.UI.DisplayText
 
                     break;
 
-                case ProtoID.T虫洞航行:
+                case ProtoID.T量子折跃:
                     __result = "量子折跃文字描述".TranslateFromJson();
 
                     break;
@@ -229,7 +223,6 @@ namespace ProjectGenesis.Patches.UI.DisplayText
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(ItemProto), nameof(ItemProto.FindRecipes))]
-        public static void ItemProto_FindRecipes(ItemProto __instance) =>
-            __instance.isRaw = __instance.recipes.Count == 0;
+        public static void ItemProto_FindRecipes(ItemProto __instance) => __instance.isRaw = __instance.recipes.Count == 0;
     }
 }

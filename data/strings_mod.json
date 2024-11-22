@@ -25,6 +25,11 @@
     "ENUS": "If the GenesisBook icon appears in the main menu, the modified tech tree appears and there is no error message, it means GenesisBook is successfully loaded. \nPlease note that this mode modifies a lot of content, and you cannot upload the data the galaxy. \nIf have any issues or ideas about the mod, please join our community on Discord."
   },
   {
+    "Name": "BepinExVersionNotMatch",
+    "ZHCN": "⚠ BepinEx版本不为5.4.17！这会导致许多不可预知的Bug。",
+    "ENUS": "⚠ BepinEx version is not 5.4.17! This leads to many unpredictable bugs."
+  },
+  {
     "Name": "巨构类",
     "ZHCN": "巨型建筑 (-)",
     "ENUS": "MegaBuilding (-)"
@@ -263,7 +268,7 @@
     "Name": "启用全部",
     "ZHCN": "对所有配方启用",
     "ENUS": "Enabled for all recipes"
-  },  
+  },
   {
     "Name": "星球基地",
     "ZHCN": "行星协调中心",
@@ -301,8 +306,8 @@
   },
   {
     "Name": "火力发电效率 +20%",
-    "ZHCN": "火力发电效率 +20%",
-    "ENUS": "Thermal Power Plant Efficiency +20%"
+    "ZHCN": "燃料电池效率 +20%",
+    "ENUS": "Fuel Cell Efficiency +20%"
   },
   {
     "Name": "风力发电效率 +20%",
@@ -390,19 +395,24 @@
     "ENUS": "Unlocks additional techs and provides additional items at the beginning"
   },
   {
-    "Name": "未解锁虫洞航行",
-    "ZHCN": "你还没有解锁虫洞航行技术",
-    "ENUS": "You have not unlocked wormhole navigation technology"
+    "Name": "未解锁量子折跃",
+    "ZHCN": "你还没有解锁量子折跃技术",
+    "ENUS": "You have not unlocked Quantum Navigation technology"
   },
   {
-    "Name": "虫洞能量不足",
-    "ZHCN": "机甲能量不足，无法开启虫洞",
-    "ENUS": "The mecha does not have enough energy to open the wormhole"
+    "Name": "折跃能量不足",
+    "ZHCN": "机甲能量不足，无法折跃",
+    "ENUS": "The mecha does not have enough energy to Quantum Navigation"
   },
   {
     "Name": "负熵奇点不足",
-    "ZHCN": "机甲背包负熵奇点数量不足，无法开启虫洞",
-    "ENUS": "The mecha does not have enough Negentropy Singularity to open the wormhole"
+    "ZHCN": "机甲背包负熵奇点数量不足，无法折跃",
+    "ENUS": "The mecha does not have enough Negentropy Singularity to Quantum Navigation"
+  },
+  {
+    "Name": "化学能",
+    "ZHCN": "化学能",
+    "ENUS": "Chemical Energy"
   },
   {
     "Name": "裂变能",

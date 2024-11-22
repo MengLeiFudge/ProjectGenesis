@@ -1,7 +1,7 @@
 [
   {
     "ModelID": 35,
-    "beltSpeed": 3
+    "beltSpeed": 2
   },
   {
     "ModelID": 36,
@@ -26,7 +26,13 @@
   {
     "ModelID": 44,
     "powerConnectDistance": 40.5,
-    "powerCoverRadius": 20.5
+    "powerCoverRadius": 20.5,
+    "allowBuildInWater": true,
+    "needBuildInWaterTech": false,
+    "waterTypes": [
+      1000,
+      7018
+    ]
   },
   {
     "ModelID": 45,
@@ -75,8 +81,8 @@
   },
   {
     "ModelID": 56,
-    "genEnergyPerTick": 10000000,
-    "useFuelPerTick": 10000000,
+    "genEnergyPerTick": 5000000,
+    "useFuelPerTick": 5000000,
     "fuelMask": 16
   },
   {
@@ -96,7 +102,13 @@
   },
   {
     "ModelID": 61,
-    "minerPeriod": 300000
+    "minerPeriod": 300000,
+    "allowBuildInWater": true,
+    "needBuildInWaterTech": false,
+    "waterTypes": [
+      1000,
+      7018
+    ]
   },
   {
     "ModelID": 62,
@@ -144,8 +156,14 @@
     "assemblerSpeed": 40000
   },
   {
+    "ModelID": 70,
+    "labAssembleSpeed": 40000
+  },
+  {
     "ModelID": 71,
-    "powerConnectDistance": 90.5
+    "powerConnectDistance": 90.5,
+    "powerCoverRadius": 10.5,
+    "workEnergyPerTick": 160000
   },
   {
     "ModelID": 72,
@@ -159,12 +177,13 @@
   },
   {
     "ModelID": 117,
-    "stationCollectSpeed": 18
+    "stationCollectSpeed": 10,
+    "workEnergyPerTick": 0
   },
   {
     "ModelID": 118,
-    "genEnergyPerTick": 2500000,
-    "useFuelPerTick": 2500000
+    "genEnergyPerTick": 1000000,
+    "useFuelPerTick": 1000000
   },
   {
     "ModelID": 194,
@@ -172,11 +191,17 @@
   },
   {
     "ModelID": 255,
-    "genEnergyPerTick": 800000
+    "genEnergyPerTick": 400000
   },
   {
     "ModelID": 256,
-    "minerPeriod": 300000
+    "minerPeriod": 300000,
+    "allowBuildInWater": true,
+    "needBuildInWaterTech": true,
+    "waterTypes": [
+      1000,
+      7018
+    ]
   },
   {
     "ModelID": 292,
@@ -195,9 +220,14 @@
     "assemblerSpeed": 40000
   },
   {
+    "ModelID": 403,
+    "powerCoverRadius": 18.5,
+    "workEnergyPerTick": 320000
+  },
+  {
     "ModelID": 407,
     "turretMaxAttackRange": 75,
-    "turretSpaceAttackRange": 8200
+    "turretSpaceAttackRange": 40000
   },
   {
     "ModelID": 408,
@@ -206,6 +236,11 @@
   {
     "ModelID": 434,
     "AmmoBlastRadius1": 15
+  },
+  {
+    "ModelID": 455,
+    "labAssembleSpeed": 120000,
+    "labResearchSpeed": 3
   },
   {
     "ModelID": 456,
@@ -289,8 +324,8 @@
   },
   {
     "ModelID": 807,
-    "genEnergyPerTick": 120000000,
-    "useFuelPerTick": 120000000,
+    "genEnergyPerTick": 25000000,
+    "useFuelPerTick": 25000000,
     "fuelMask": 4
   },
   {
@@ -350,11 +385,13 @@
     "isPowerConsumer": false,
     "workEnergyPerTick": 0,
     "stationMaxDroneCount": 0,
-    "stationCollectSpeed": 4
+    "stationCollectSpeed": 10
   },
   {
     "ModelID": 813,
-    "AmmoBlastRadius1": 20
+    "AmmoBlastRadius1": 20,
+    "AmmoMoveAcc": 60,
+    "AmmoTurnAcc": 60
   },
   {
     "ModelID": 814,

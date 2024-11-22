@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -10,49 +9,9 @@ namespace ProjectGenesis.Patches.UI.BeltColorFix
 {
     public static class BeltFixPatches
     {
-        private static readonly FieldInfo BeltComponent_Speed_Field =
-            AccessTools.Field(typeof(BeltComponent), nameof(BeltComponent.speed));
+        private static readonly FieldInfo BeltComponent_Speed_Field = AccessTools.Field(typeof(BeltComponent), nameof(BeltComponent.speed));
 
-        private static readonly FieldInfo PrefabDesc_beltSpeed_Field =
-            AccessTools.Field(typeof(PrefabDesc), nameof(PrefabDesc.beltSpeed));
-
-        [HarmonyPatch(typeof(CargoTraffic), nameof(CargoTraffic.AlterBeltRenderer))]
-        [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> CargoTraffic_AlterBeltRenderer_Transpiler(
-            IEnumerable<CodeInstruction> instructions)
-        {
-            var matcher = new CodeMatcher(instructions);
-
-            matcher.MatchForward(false, new CodeMatch(OpCodes.Ldloc_1),
-                new CodeMatch(OpCodes.Ldfld, BeltComponent_Speed_Field),
-                new CodeMatch(OpCodes.Ldc_I4_1));
-
-            CodeMatcher matcher2 = matcher.Clone();
-            matcher2.MatchForward(true, new CodeMatch(OpCodes.Ldloc_S),
-                new CodeMatch(OpCodes.Stloc_S));
-
-            object num4 = matcher2.Operand;
-            matcher2.Advance(1);
-            object label = matcher2.Operand;
-
-            matcher.Advance(2).InsertAndAdvance(new CodeInstruction(OpCodes.Ldloc_S, num4))
-                .SetInstruction(Transpilers.EmitDelegate<Func<int, int, int>>((speed, other) =>
-                {
-                    switch (speed)
-                    {
-                        case 10:
-                            return other + 8;
-                        case 5:
-                            return other + 4;
-                        default:
-                            return other;
-                    }
-                })).Advance(1)
-                .InsertAndAdvance(new CodeInstruction(OpCodes.Stloc_S, num4))
-                .SetInstruction(new CodeInstruction(OpCodes.Br, label));
-
-            return matcher.InstructionEnumeration();
-        }
+        private static readonly FieldInfo PrefabDesc_beltSpeed_Field = AccessTools.Field(typeof(PrefabDesc), nameof(PrefabDesc.beltSpeed));
 
         [HarmonyPatch(typeof(ConnGizmoRenderer), nameof(ConnGizmoRenderer.Update))]
         [HarmonyTranspiler]
@@ -71,8 +30,7 @@ namespace ProjectGenesis.Patches.UI.BeltColorFix
 
         [HarmonyPatch(typeof(CargoTraffic), nameof(CargoTraffic.SetBeltSelected))]
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> CargoTraffic_SetBeltSelected_Transpiler(
-            IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> CargoTraffic_SetBeltSelected_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var matcher = new CodeMatcher(instructions);
 
@@ -89,8 +47,7 @@ namespace ProjectGenesis.Patches.UI.BeltColorFix
         [HarmonyPatch(typeof(BuildTool_BlueprintCopy), nameof(BuildTool_BlueprintCopy.UpdatePreviewModels))]
         [HarmonyPatch(typeof(BuildTool_Path), nameof(BuildTool_Path.UpdateGizmos))]
         [HarmonyTranspiler]
-        public static IEnumerable<CodeInstruction> BuildTool_Path_UpdateGizmos_Transpiler(
-            IEnumerable<CodeInstruction> instructions)
+        public static IEnumerable<CodeInstruction> BuildTool_Path_UpdateGizmos_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
             var matcher = new CodeMatcher(instructions);
 
@@ -107,13 +64,30 @@ namespace ProjectGenesis.Patches.UI.BeltColorFix
             return matcher.InstructionEnumeration();
         }
 
+        [HarmonyPatch(typeof(CargoTraffic), nameof(CargoTraffic.AlterBeltRenderer))]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> CargoTraffic_AlterBeltRenderer_Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var matcher = new CodeMatcher(instructions);
+
+            matcher.MatchForward(false, new CodeMatch(OpCodes.Ldfld, BeltComponent_Speed_Field));
+
+            matcher.Advance(1).InsertAndAdvance(new CodeInstruction(OpCodes.Call,
+                AccessTools.Method(typeof(BeltFixPatches), nameof(BeltSpeed_Patch))));
+
+            matcher.MatchForward(false, new CodeMatch(OpCodes.Ldfld, BeltComponent_Speed_Field));
+
+            matcher.Advance(1).InsertAndAdvance(new CodeInstruction(OpCodes.Call,
+                AccessTools.Method(typeof(BeltFixPatches), nameof(BeltSpeed_Patch))));
+
+
+            return matcher.InstructionEnumeration();
+        }
+
         [HarmonyPatch(typeof(PathRenderingBatch), nameof(PathRenderingBatch.AddNode))]
         [HarmonyPatch(typeof(PathRenderingBatch), nameof(PathRenderingBatch.AddNodeNoRefresh))]
         [HarmonyPrefix]
-        public static void PathRenderingBatch_AddNode_Prefix(ref int speed)
-        {
-            speed = BeltSpeed_Patch(speed);
-        }
+        public static void PathRenderingBatch_AddNode_Prefix(ref int speed) => speed = BeltSpeed_Patch(speed);
 
         public static int BeltSpeed_Patch(int beltSpeed)
         {
@@ -123,7 +97,7 @@ namespace ProjectGenesis.Patches.UI.BeltColorFix
 
                 case 5: return 2;
 
-                case 3: return 1;
+                case 2: return 1;
 
                 default: return beltSpeed;
             }
