@@ -26,7 +26,7 @@ namespace ProjectGenesis
             File.WriteAllText(Path.Combine(releasePath, "manifest.json"), JsonConvert.SerializeObject(manifestObject, Formatting.Indented));
 
             var zipName = new StringBuilder(80).Append(manifestObject.Name).Append("-v").Append(ProjectGenesis.VERSION)
-               .Append(IsDebugBuild ? ProjectGenesis.DEBUGVERSION : "").Append(".zip").ToString();
+               .Append(IsDebugBuild ? $"-{ProjectGenesis.DEBUGVERSION}" : "").Append(".zip").ToString();
 
             string archive = Path.Combine(SolutionPath, zipName);
 
@@ -53,8 +53,8 @@ namespace ProjectGenesis
         [JsonProperty("dependencies")]
         public string[] Dependencies { get; set; } =
         {
-            "CommonAPI-CommonAPI-1.6.7", "nebula-NebulaMultiplayerModApi-2.0.0", "starfi5h-ErrorAnalyzer-1.3.3",
-            "Shad0wlife-AssemblerUI-2.3.0",
+            "CommonAPI-CommonAPI-1.6.7", "nebula-NebulaMultiplayerModApi-2.1.0", "starfi5h-ErrorAnalyzer-1.3.3",
+            // "Shad0wlife-AssemblerUI-2.3.0",
         };
 
         internal static ManifestObject DebugObject()
