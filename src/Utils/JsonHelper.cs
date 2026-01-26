@@ -431,7 +431,8 @@ namespace ProjectGenesis.Utils
         {
             public int ID { get; set; }
             public string Name { get; set; }
-            public string PreText { get; set; }
+            // todo
+           // public string LayoutFileName { get; set; }
             public string DeterminatorName { get; set; }
             public long[] DeterminatorParams { get; set; }
 
@@ -440,7 +441,7 @@ namespace ProjectGenesis.Utils
                 {
                     ID = ID,
                     Name = Name,
-                    // PreText = PreText, // todo
+                 //   LayoutFileName = LayoutFileName,
                     DeterminatorName = DeterminatorName,
                     DeterminatorParams = DeterminatorParams,
                 };

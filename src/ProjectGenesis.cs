@@ -48,7 +48,7 @@ namespace ProjectGenesis
     {
         public const string MODGUID = "org.LoShin.GenesisBook";
         public const string MODNAME = "GenesisBook";
-        public const string VERSION = "3.1.4";
+        public const string VERSION = "3.1.5";
         public const string DEBUGVERSION = "";
 
         public static bool LoadCompleted;
@@ -290,6 +290,7 @@ namespace ProjectGenesis
             ModelProto.InitModelIndices();
             ModelProto.InitModelOrders();
             RecipeProto.InitFractionatorNeeds();
+            SignalProtoSet.InitSignalKeyIdPairs();
             RaycastLogic.LoadStatic();
 
             ref int[] turretNeed = ref ItemProto.turretNeeds[(int)EAmmoType.Bullet];
