@@ -521,5 +521,53 @@ namespace ProjectGenesis.Patches
                 }
             }
         }
+
+        [HarmonyPatch(typeof(AssemblerComponent), nameof(AssemblerComponent.Import))]
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> AssemblerComponent_Import_Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var matcher = new CodeMatcher(instructions);
+        
+            // Fix index boundaries in AssemblerComponent.Import
+            // The original code uses 'index > length' which allows 'index == length' to pass,
+            // leading to IndexOutOfRangeException when accessing arrays.
+            // We change Bgt/Bgt_S to Bge/Bge_S to correctly check boundaries.
+        
+            var found = false;
+            while (matcher.MatchForward(false, new CodeMatch(i => i.opcode == OpCodes.Bgt || i.opcode == OpCodes.Bgt_S)).IsValid)
+            {
+                OpCode oldOp = matcher.Opcode;
+                OpCode newOp = oldOp == OpCodes.Bgt ? OpCodes.Bge : OpCodes.Bge_S;
+                matcher.SetOpcodeAndAdvance(newOp);
+                found = true;
+            }
+        
+            if (!found)
+            {
+                ProjectGenesis.logger.LogWarning("AssemblerComponent_Import_Transpiler: No Bgt/Bgt_S instructions found to fix.");
+            }
+        
+            return matcher.InstructionEnumeration();
+        }
+
+        [HarmonyPatch(typeof(AssemblerComponent), nameof(AssemblerComponent.Import))]
+        [HarmonyPostfix]
+        public static void AssemblerComponent_Import_Postfix(ref AssemblerComponent __instance)
+        {
+            if (__instance.recipeId <= 0 || __instance.recipeExecuteData == null) return;
+
+            int requiresLength = __instance.recipeExecuteData.requires.Length;
+            if (__instance.served == null || __instance.served.Length != requiresLength)
+                Array.Resize(ref __instance.served, requiresLength);
+            if (__instance.incServed == null || __instance.incServed.Length != requiresLength)
+                Array.Resize(ref __instance.incServed, requiresLength);
+
+            int productsLength = __instance.recipeExecuteData.products.Length;
+            if (__instance.produced == null || __instance.produced.Length != productsLength)
+                Array.Resize(ref __instance.produced, productsLength);
+
+            if (__instance.needs == null || __instance.needs.Length != 6)
+                Array.Resize(ref __instance.needs, 6);
+        }
     }
 }
