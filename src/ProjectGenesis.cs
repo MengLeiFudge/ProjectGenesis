@@ -291,6 +291,7 @@ namespace ProjectGenesis
             ModelProto.InitMaxModelIndex();
             ModelProto.InitModelIndices();
             ModelProto.InitModelOrders();
+            RecipeProto.InitRecipeItems();
             RecipeProto.InitFractionatorNeeds();
             SignalProtoSet.InitSignalKeyIdPairs();
             RaycastLogic.LoadStatic();
