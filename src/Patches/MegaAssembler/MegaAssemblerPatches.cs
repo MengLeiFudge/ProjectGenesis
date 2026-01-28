@@ -503,12 +503,18 @@ namespace ProjectGenesis.Patches
                 {
                     __instance.ReadObjectConn(entityId, i, out _, out int otherObjId, out _);
 
-                    if (otherObjId <= 0 || __instance.entityPool[otherObjId].beltId != datas[i].beltId)
+                    if (otherObjId <= 0 || datas[i].beltId <= 0 || datas[i].beltId >= __instance.cargoTraffic.beltCursor || __instance.entityPool[otherObjId].beltId != datas[i].beltId)
                     {
-                        BeltComponent beltComponent = __instance.cargoTraffic.beltPool[datas[i].beltId];
-                        ref SignData signData = ref __instance.entitySignPool[beltComponent.entityId];
-                        signData.iconType = 0U;
-                        signData.iconId0 = 0U;
+                        if (datas[i].beltId > 0 && datas[i].beltId < __instance.cargoTraffic.beltCursor)
+                        {
+                            BeltComponent beltComponent = __instance.cargoTraffic.beltPool[datas[i].beltId];
+                            if (beltComponent.id > 0)
+                            {
+                                ref SignData signData = ref __instance.entitySignPool[beltComponent.entityId];
+                                signData.iconType = 0U;
+                                signData.iconId0 = 0U;
+                            }
+                        }
 
                         datas[i] = new SlotData();
                     }
